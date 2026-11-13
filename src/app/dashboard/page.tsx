@@ -3,8 +3,10 @@ import { createClient } from '@/lib/supabase/server';
 import { SignOut } from '@/components/sign-out';
 export const dynamic='force-dynamic';
 export default async function Dashboard(){
- const supabase=await createClient();const {data:{claims}}=await supabase.auth.getClaims();if(!claims)redirect('/login');
- const { data: profile, error } = await supabase.from('profiles').select('full_name,role,active').eq('id',claims.sub).maybeSingle();
+ const supabase = await createClient();
+ const { data: session } = await supabase.auth.getClaims();
+ if (!session?.claims.sub) redirect('/login');
+ const { data: profile, error } = await supabase.from('profiles').select('full_name,role,active').eq('id',session.claims.sub).maybeSingle();
  if (error) return <main><div className="panel"><h1>Unable to load your profile</h1><p>Reload the page or contact the office if the problem continues.</p><SignOut/></div></main>;
  if (!profile) return <main><div className="panel"><h1>Employee profile unavailable</h1><p>Ask the office to check that your employee profile is linked to your sign-in account.</p><SignOut/></div></main>;
  if (!profile.active) return <main><div className="panel"><h1>Account not active</h1><p>Please contact the office for access.</p><SignOut/></div></main>;
