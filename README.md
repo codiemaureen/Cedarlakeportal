@@ -18,6 +18,12 @@ Mobile-first employee portal for Cedar Lake Carpentry.
 5. Run `npm run dev` and open http://localhost:3000.
 6. Validate with `npm run typecheck`, `npm run lint`, and `npm run build`.
 
+## Troubleshoot local sign-in
+
+- Compare the URL and publishable key in `.env.local` with the values in the same Supabase project where you created the users. Use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` exactly as shown in `.env.example`. Restart `npm run dev` after editing the file.
+- For a sign-in error, check that the account in Authentication > Users has the expected email and that the email is confirmed. The Supabase Auth logs can show the error code for a failed attempt.
+- If sign-in succeeds but the employee profile is unavailable, check that `public.profiles.id` matches the user's Authentication UID and that the profile select policy from `supabase/phase1.sql` is in place.
+
 ## Security
 - Employee accounts are provisioned by the office; public signup is not offered.
 - Server dashboard requires valid identity and active employee profile.
